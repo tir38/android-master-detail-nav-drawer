@@ -13,7 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 
-public class ExampleMenuActivity extends AppCompatActivity implements ExampleMasterFragment.Callbacks {
+public class MainActivity extends AppCompatActivity implements MasterFragment.Callbacks {
 
     private static final String TAG_MASTER_FRAGMENT = "TAG_MASTER_FRAGMENT";
     private static final String TAG_DETAIL_FRAGMENT = "TAG_DETAIL_FRAGMENT";
@@ -23,7 +23,7 @@ public class ExampleMenuActivity extends AppCompatActivity implements ExampleMas
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_example_menu);
+        setContentView(R.layout.activity_main);
 
         // setup toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -33,9 +33,14 @@ public class ExampleMenuActivity extends AppCompatActivity implements ExampleMas
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawerLayout != null) {
             NavigationView navigationView = (NavigationView) findViewById(R.id.master_fragment_container);
-            setupDrawerContent(navigationView);
+            navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                    return true;
+                }
+            });
 
-            // setup hamburger icon
+            // setup menu icon
             final ActionBar actionBar = getSupportActionBar();
             if (actionBar != null) {
                 actionBar.setHomeAsUpIndicator(R.drawable.ic_menu_black_24dp);
@@ -44,16 +49,16 @@ public class ExampleMenuActivity extends AppCompatActivity implements ExampleMas
         }
 
         // insert detail fragment into detail container
-        ExampleDetailFragment exampleDetailFragment = ExampleDetailFragment.newInstance();
+        DetailFragment detailFragment = DetailFragment.newInstance();
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
-                .add(R.id.detail_fragment_container, exampleDetailFragment, TAG_DETAIL_FRAGMENT)
+                .add(R.id.detail_fragment_container, detailFragment, TAG_DETAIL_FRAGMENT)
                 .commit();
 
         // insert master fragment into master container (i.e. nav view)
-        ExampleMasterFragment exampleMasterFragment = ExampleMasterFragment.newInstance();
+        MasterFragment masterFragment = MasterFragment.newInstance();
         fragmentManager.beginTransaction()
-                .add(R.id.master_fragment_container, exampleMasterFragment, TAG_MASTER_FRAGMENT)
+                .add(R.id.master_fragment_container, masterFragment, TAG_MASTER_FRAGMENT)
                 .commit();
     }
 
@@ -71,21 +76,13 @@ public class ExampleMenuActivity extends AppCompatActivity implements ExampleMas
 
     @Override
     public void onMasterItemClicked(int masterItemId) {
-        ExampleDetailFragment detailFragment = (ExampleDetailFragment) getSupportFragmentManager().findFragmentByTag(TAG_DETAIL_FRAGMENT);
+        DetailFragment detailFragment = (DetailFragment) getSupportFragmentManager()
+                .findFragmentByTag(TAG_DETAIL_FRAGMENT);
         detailFragment.onMasterItemClicked(masterItemId);
 
         // Close the navigation drawer
         if (drawerLayout != null) {
             drawerLayout.closeDrawers();
         }
-    }
-
-    private void setupDrawerContent(NavigationView navigationView) {
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                return true;
-            }
-        });
     }
 }

@@ -10,9 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-public class ExampleDetailFragment extends Fragment {
+public class DetailFragment extends Fragment {
 
-    private static final String TAG = ExampleDetailFragment.class.getSimpleName();
+    private static final String TAG = DetailFragment.class.getSimpleName();
 
     private TextView textView1;
     private TextView textView2;
@@ -20,14 +20,17 @@ public class ExampleDetailFragment extends Fragment {
     private int nonSelectedColor;
     private int selectedColor;
 
-    public static ExampleDetailFragment newInstance() {
-        return new ExampleDetailFragment();
+    public static DetailFragment newInstance() {
+        return new DetailFragment();
     }
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_example_detail, container, false);
+    public View onCreateView(LayoutInflater inflater,
+                             @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+
+        View view = inflater.inflate(R.layout.fragment_detail, container, false);
 
         textView1 = (TextView) view.findViewById(R.id.detail_item_1);
         textView2 = (TextView) view.findViewById(R.id.detail_item_2);

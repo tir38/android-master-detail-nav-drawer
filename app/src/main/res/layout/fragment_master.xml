@@ -2,11 +2,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="@color/grey"
+              android:background="@color/blue"
               android:paddingTop="@dimen/nav_drawer_top_padding"
               android:orientation="vertical">
 
-    <!-- TODO: replace this simple list with recyclerview or however you want to generate your master list -->
+    <!-- Replace this simple list with recyclerview or however you
+        want to generate your master list -->
 
     <TextView
         android:id="@+id/master_item_1"

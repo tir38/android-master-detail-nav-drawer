@@ -10,12 +10,12 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 
-public class ExampleMasterFragment extends Fragment {
+public class MasterFragment extends Fragment {
 
     private Callbacks callbacks;
 
-    public static ExampleMasterFragment newInstance() {
-        return new ExampleMasterFragment();
+    public static MasterFragment newInstance() {
+        return new MasterFragment();
     }
 
     interface Callbacks {
@@ -33,8 +33,11 @@ public class ExampleMasterFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_example_master, container, false);
+    public View onCreateView(LayoutInflater inflater,
+                             @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+
+        View view = inflater.inflate(R.layout.fragment_master, container, false);
 
         TextView textView1 = (TextView) view.findViewById(R.id.master_item_1);
         textView1.setOnClickListener(new View.OnClickListener() {
