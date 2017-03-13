@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- on devices older than API 19, we don't need to pad top of nav drawer since nav drawer
+    won't go "under" status bar -->
+    <dimen name="nav_drawer_top_padding">0dp</dimen>
+</resources>

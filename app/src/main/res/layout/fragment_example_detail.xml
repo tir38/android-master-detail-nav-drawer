@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:paddingTop="@dimen/nav_drawer_top_padding"
+              android:orientation="vertical">
+
+    <!-- TODO: replace this simple list with recyclerview or however you want to generate your detail list -->
+
+    <TextView
+        android:id="@+id/detail_item_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:text="detail list item 1"
+        android:textColor="@color/black"/>
+
+    <TextView
+        android:id="@+id/detail_item_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:text="detail list item 2"
+        android:textColor="@color/black"/>
+
+    <TextView
+        android:id="@+id/detail_item_3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:text="detail list item 3"
+        android:textColor="@color/black"/>
+
+</LinearLayout>

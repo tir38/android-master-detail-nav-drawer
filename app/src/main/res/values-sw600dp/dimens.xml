@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- we don't need nav drawer top padding on sw600dp + because we'll never show nav drawer -->
+    <dimen name="nav_drawer_top_padding">0dp</dimen>
+</resources>

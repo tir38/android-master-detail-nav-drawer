@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/grey"
+              android:paddingTop="@dimen/nav_drawer_top_padding"
+              android:orientation="vertical">
+
+    <!-- TODO: replace this simple list with recyclerview or however you want to generate your master list -->
+
+    <TextView
+        android:id="@+id/master_item_1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:text="master list item 1"/>
+
+    <TextView
+        android:id="@+id/master_item_2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:text="master list item 2"/>
+
+    <TextView
+        android:id="@+id/master_item_3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:text="master list item 3"/>
+
+</LinearLayout>
