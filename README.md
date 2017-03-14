@@ -514,7 +514,7 @@ public class MainActivity extends AppCompatActivity implements MasterFragment.Ca
 
 All we need to do is null check `drawerLayout` before setting up drawer view and menu icon. If Android decides to use our `layout/activity_main.xml`, then the view hierarchy will contain a view with id `drawer_layout`. If Android decides to use `layout-sw600dp/activity_main.xml`, then the view hierarchy will NOT contain a view with that id. In other words, we are able to use the presense of `drawerLayout` as an indication of whether we're on a large screen or not.
 
-At this point we are pretty muched wrapped up. Checking our results on several phones and tablets shows that things are working perfectly.
+At this point we are pretty muched wrapped up. Checking our results on several phones and tablets shows that things are working as expected.
 
 ![phone](readme_images/phone_and_tablet_almost.png)
 
@@ -591,7 +591,9 @@ Now lastly you'll notice that on devices that are API 19+ but also tablets (sw >
 
 This works because smallest width qualifiers are checked before API version qualifiers. So if we are on an API 19+ tablet, we'll hit the `sw600dp` bin first and get 0dp padding, and never access the `v19` bin.
 
-**TODO add api 19 closeup fixed**
+![api 19 finally looking good](readme_images/api19_closeup.png)
+
+*Navigation drawer finally looks good on phones that are API 19 and newer.*
 
 The second problem involves tablets that are API 19+. Here we see that the Toolbar is slid up under the transparent status bar. This is also caused by `android:windowTranslucentStatus`. 
 
