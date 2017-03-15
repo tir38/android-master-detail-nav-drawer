@@ -614,7 +614,7 @@ Now things are working great!
 *Finally looks good on tablets too.*
 
 
-That's it. Now everything looks perfect on old and new phones and old and new tablets!
+That's it. Now everything looks perfect on old and new phones and old and new tablets! Get the sourcecode for this project [here](https://github.com/tir38/android-master-detail-nav-drawer).
 
 
 
