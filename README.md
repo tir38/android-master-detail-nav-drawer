@@ -1,20 +1,20 @@
-The Navigation Drawer pattern is ubiquitous on Android devices:
+The navigation drawer pattern is ubiquitous on Android devices:
 
 ![nav_example](readme_images/nav_example.png)
 
 *Sample from Material Design.*
 
-This pattern is easily implemented with the [Design Support Library](https://android-developers.googleblog.com/2015/05/android-design-support-library.html). The best walkthrough on how to build this [tutorial by CodePath](http://guides.codepath.com/android/fragment-navigation-drawer).
+This pattern is easily implemented with the [Design Support Library](https://android-developers.googleblog.com/2015/05/android-design-support-library.html). The best walkthrough on how to build a navigation drawer is this [tutorial by CodePath](http://guides.codepath.com/android/fragment-navigation-drawer).
 
-On larger devices though, hiding and showing the navigation drawer is unneccessary. With plenty of screen realestate, the menu should just stay open all the time. The [Material Design specs](https://material.io/guidelines/patterns/navigation-drawer.html#navigation-drawer-behavior) even recommend this behavior. I set out to see if I can use Fragments to make this re-use easy.
+On larger devices though, hiding and showing the navigation drawer is unneccessary. With plenty of screen real estate, the drawer should just stay open all the time. The [Material Design specs](https://material.io/guidelines/patterns/navigation-drawer.html#navigation-drawer-behavior) even recommend this behavior. There are [ways](http://stackoverflow.com/a/18095111) to accomplish this "always open" behavior on tablets by using [DrawerLayout.LOCK_MODE_LOCKED_OPEN](https://developer.android.com/reference/android/support/v4/widget/DrawerLayout.html#LOCK_MODE_LOCKED_OPEN), but I found them a bit hacky and unelegant. Additionally by implementing CodePath's example, too much of the view logic would live in the hosted activity. I set out to see if I can use Fragments to solve this problem. Basically we will have a *master* fragment that will be used for the drawer view and a *detail* fragment for the main view. We'll then reuse these fragments in a classic master/detail arrangement on tablets.
 
 ![phone](readme_images/phone_and_tablet.png)
 
 *The end result.*
 
-If you're unfamiliar with Navigation Drawers, I suggest you run through the CodePath tutorial first. It'll take you maybe 30 minutes and you'll have a better understanding of what we're going to do here.
+If you're unfamiliar with navigation drawers, I suggest you run through the CodePath tutorial first. It'll take you maybe 30 minutes and you'll have a better understanding of what we're going to do here.
 
-Let's get started codeing the building blocks of our app, the re-usable pieces, the Fragments and their layouts. We are going to keep things real simple so the UI is a bit ugly. Let's fist create the layouts for our master and detail fragments:
+Let's get started coding the building blocks of our app: the Fragments and their layouts. We are going to keep things real simple so the UI is a bit ugly. Let's fist create the layouts for our master and detail fragments:
 
 `fragment_master.xml`:
 
@@ -226,7 +226,7 @@ Now we need to host these two fragments in our `Activity`, but first let's creat
 </android.support.v4.widget.DrawerLayout>
 ```
 
-There's a lot going on here. If you have used navigateion drawers before, or you read through the CodePath example, some of this should look familiar. We need to set a `DrawerLayout` as our root view. We then need add a `FrameLayout`  as the container to insert our **detail** fragment. Now here' the cool part. Instead of including our `fragment_master.xml` layout inside `NavigationView`, we'll actually use the `NavigationView` as another container, this time for our **master** fragment.
+There's a lot going on here. If you have used navigateion drawers before, or you read through the CodePath example, some of this should look familiar. We need to set a `DrawerLayout` as our root view. We then need add a `FrameLayout`  as the container to insert our **detail** fragment. Now here' the cool part. Instead of including a `ListView` inside `NavigationView`, we'll actually use the `NavigationView` as another container, this time for our **master** fragment.
 
 So now we can wire all this up inside our Activity:
 
@@ -304,7 +304,7 @@ Again a lot of this comes from the CodePath example:
 
 The important parts of using fragments is creating our master and detail fragments and using fragment transactions to insert them into their respective containers. We'll also add fragment tags so that we can easily find our fragments later.
 
-Next we need to pass the clicked item ID from the master fragment "up" to our activity and then "down" to the detail fragment. We can use fragment callbacks to pass the item ID up to the activity. We can then add a public method for the activity to pass the ID to the detail fragment. I won't go into details about how to set this up. chances are you've done this before. Feel free to catch up [here](https://developer.android.com/training/basics/fragments/communicating.html)
+Next we need to pass the clicked item ID from the master fragment "up" to our activity and then "down" to the detail fragment. We can use fragment callbacks to pass the item ID up to the activity. We can then add a public method on `DetailFragment` for the activity to pass the ID to the detail fragment. I won't go into details about how to set this up. Chances are you've done this before. Feel free to catch up [here](https://developer.android.com/training/basics/fragments/communicating.html).
 
  So our fragments and activity becomes:
 
@@ -330,12 +330,12 @@ public class MasterFragment extends Fragment {
         textView1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                <b>callbacks.onMasterItemClicked(1);</b>
+                <b>callbacks.onMasterItemClicked(1); // repeat for other textViews</b>
             }
         });
 
-		<b>// repeat for other textViews</b>
-
+		...
+		
         return view;
     }
 }
@@ -378,24 +378,20 @@ public class DetailFragment extends Fragment {
             case 1:
                 textView1.setTextColor(selectedColor);
                 break;
-
             case 2:
                 textView2.setTextColor(selectedColor);
                 break;
-
             case 3:
                 textView3.setTextColor(selectedColor);
                 break;
-
             default:
                 Log.d(TAG, "unknown master ID");
-
         }
     }</b>
 }
 </pre>
 
-At this point we've basically reproduced the CodePath example but with Fragments. We don't really have anything to show for our extra work. So now is the time to re-use our master and detail fragments to make this look different on larger screens.
+At this point we've basically reproduced the functionality of the CodePath example but with Fragments. We don't yet have anything to show for our extra work. So now is the time to re-use our master and detail fragments to make the UI look different on larger screens.
 
 We are going to use resource qualifiers to supply a different version of `activity_main.xml` on screens with a smallest width greater than 600dp. This is a good initial guess at tablet size.
 
@@ -439,7 +435,7 @@ So create a resource directory `src/main/res/layout-sw600dp` and inside it creat
 </LinearLayout>
 ```
 
-This is a much simpler layout. Again we still have two containers for master and detail fragments. Note that the `id`s need to match what we had in `layout/activity_main.xml`. We also need the `Toolbar`. Lastly we need to decide the relateive spacing of the master/detail. I've quickly chosen a 1:4 split by using `layout_weight`. This is really up to you. You may decide to just wrap width of the master container and give all the remaining width to the detail. It's up to you.
+This is a much simpler layout than `layout/activity_main.xml`. Again we still have two containers for master and detail fragments. Note that the `id`s need to match what we had in `layout/activity_main.xml`. We also need the `Toolbar`. Lastly we need to decide the relateive spacing of the master/detail. I've quickly chosen a 1:4 split by using `layout_weight`. This is really up to you. You may decide to just wrap width of the master container and give all the remaining width to the detail. It's up to you.
 
 Now we need to head back to our Activity and make sure it can handle this new layout. We need to make just a few changes
 
@@ -512,29 +508,29 @@ public class MainActivity extends AppCompatActivity implements MasterFragment.Ca
 }
 </pre>
 
-All we need to do is null check `drawerLayout` before setting up drawer view and menu icon. If Android decides to use our `layout/activity_main.xml`, then the view hierarchy will contain a view with id `drawer_layout`. If Android decides to use `layout-sw600dp/activity_main.xml`, then the view hierarchy will NOT contain a view with that id. In other words, we are able to use the presense of `drawerLayout` as an indication of whether we're on a large screen or not.
+All we need to do is null check `drawerLayout` before setting up drawer view and menu icon and before we try to close the drawer. If Android decides to use our `layout/activity_main.xml`, then the view hierarchy will contain a view with id `drawer_layout`. If Android decides to use `layout-sw600dp/activity_main.xml`, then the view hierarchy will NOT contain a view with that id. In other words, we are able to use the presense of `drawerLayout` as an indication of whether we're on a large screen or not.
 
 At this point we are pretty muched wrapped up. Checking our results on several phones and tablets shows that things are working as expected.
 
 ![phone](readme_images/phone_and_tablet_almost.png)
 
-*Navigation Drawer on phone and master/detail on tablet.*
+*Navigation drawer on phone and master/detail on tablet.*
 
 
 Bonus Round
 ----
 
-There are two small things bothering me. First let's compare the Navigation Drawer to pre-API 19 devices with newer ones:
+There are two small things bothering me. First let's compare the navigation drawer to pre-API 19 devices with newer ones:
 
 ![yuck](readme_images/yuck_closeup.png)
 
-*Yuck! Navigation Drawer looks terirrlbe on devices API 19 and newer.*
+*Yuck! Navigation drawer looks terirrlbe on devices API 19 and newer.*
 
 ![Looks good](readme_images/api17_closeup.png)
 
 *Looks fine on devices older than API 19.*
 
-When we followed the CodePath example we used a transparent status bar on API 19+ devices (see `android:windowTranslucentStatus` in `values-v19/styles.xml`). This allowed the navigation drawer to slide "under" the status bar. This matches the material design specs. However on these newer devices, if our drawer content is too near the top it will get partially obscured by the status bar. I've actually seen this on a few production apps I use personally. Fixing this problem is quite easy though. We will supply some top padding to the root view in `fragment_detail.xml`, *but only for API 19+ devices that are using the navigation drawer (i.e. devices with smallest width less than 600dp).
+When we followed the CodePath example we used a transparent status bar on API 19+ devices (see `android:windowTranslucentStatus` in `values-v19/styles.xml`). This allowed the navigation drawer to slide "under" the status bar. This matches the material design specs. However on these newer devices, if our drawer content is too near the top it will get partially obscured by the status bar. I've actually seen this on a few production apps I use personally. Fixing this problem is quite easy though. We will supply some top padding to the root view in `fragment_detail.xml`, **but only for API 19+ devices that are using the navigation drawer** (i.e. devices with smallest width less than 600dp).
 
 `fragment_detail.xml`:
 
@@ -544,7 +540,7 @@ When we followed the CodePath example we used a transparent status bar on API 19
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:background="@color/blue"
-              android:paddingTop="@dimen/nav_drawer_top_padding" 
+              android:paddingTop="@dimen/nav_drawer_top_padding" <!-- add this line -->
               android:orientation="vertical">
  ...              
  
@@ -589,7 +585,7 @@ Now lastly you'll notice that on devices that are API 19+ but also tablets (sw >
 </resources>
 ```
 
-This works because smallest width qualifiers are checked before API version qualifiers. So if we are on an API 19+ tablet, we'll hit the `sw600dp` bin first and get 0dp padding, and never access the `v19` bin.
+This works because smallest width qualifiers are checked before API version qualifiers. So if we are on an API 19+ tablet, we'll hit the `sw600dp` bin first and get 0dp padding, and never access the `v19` bin. The navigation drawer is now looking good on API 19+ phones.
 
 ![api 19 finally looking good](readme_images/api19_closeup.png)
 
