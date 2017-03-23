@@ -18,7 +18,7 @@ Let's get started coding the building blocks of our app: the Fragments and their
 
 `fragment_master.xml`:
 
-```
+```xml
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
@@ -36,19 +36,7 @@ Let's get started coding the building blocks of our app: the Fragments and their
         android:padding="16dp"
         android:text="master list item 1"/>
 
-    <TextView
-        android:id="@+id/master_item_2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:text="master list item 2"/>
-
-    <TextView
-        android:id="@+id/master_item_3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:text="master list item 3"/>
+	...
 
 </LinearLayout>
 ```
@@ -59,7 +47,7 @@ Similarly for the detail screen:
 
 `fragment_detail.xml`:
 
-```
+```xml
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
@@ -76,19 +64,7 @@ Similarly for the detail screen:
         android:layout_margin="16dp"
         android:text="detail list item 1"/>
 
-    <TextView
-        android:id="@+id/detail_item_2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:text="detail list item 2"/>
-
-    <TextView
-        android:id="@+id/detail_item_3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:text="detail list item 3"/>
+   	...
 
 </LinearLayout>
 ```
@@ -99,7 +75,7 @@ Now let's wire these layouts up to our Fragments:
 
 `MasterFragment.java`:
 
-```
+```java
 public class MasterFragment extends Fragment {
 
     public static MasterFragment newInstance() {
@@ -122,21 +98,7 @@ public class MasterFragment extends Fragment {
             }
         });
 
-        TextView textView2 = (TextView) view.findViewById(R.id.master_item_2);
-        textView2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // TODO
-            }
-        });
-
-        TextView textView3 = (TextView) view.findViewById(R.id.master_item_3);
-        textView3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // TODO
-            }
-        });
+        ... // repeat for textView2 and textView3
 
         return view;
     }
@@ -146,7 +108,7 @@ public class MasterFragment extends Fragment {
 
 `DetailFragment.java`:
 
-```
+```java
 public class DetailFragment extends Fragment {
 
     private TextView textView1;
@@ -168,8 +130,7 @@ public class DetailFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_detail, container, false);
 
         textView1 = (TextView) view.findViewById(R.id.detail_item_1);
-        textView2 = (TextView) view.findViewById(R.id.detail_item_2);
-        textView3 = (TextView) view.findViewById(R.id.detail_item_3);
+		... // repeat for textView2 and textView3
 
         selectedColor = ContextCompat.getColor(getContext(), R.color.red);
         nonSelectedColor = ContextCompat.getColor(getContext(), R.color.black);
@@ -185,7 +146,7 @@ Now we need to host these two fragments in our `Activity`, but first let's creat
 
 `activity_main.xml`:
 
-```
+```xml
 <android.support.v4.widget.DrawerLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/drawer_layout"
@@ -218,8 +179,7 @@ Now we need to host these two fragments in our `Activity`, but first let's creat
         android:id="@+id/master_fragment_container"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:fitsSystemWindows="true">
+        android:layout_gravity="start">
 
     </android.support.design.widget.NavigationView>
     
@@ -232,7 +192,7 @@ So now we can wire all this up inside our Activity:
 
 `MainActivity.java`:
 
-```
+```java
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG_MASTER_FRAGMENT = "TAG_MASTER_FRAGMENT";
@@ -378,12 +338,9 @@ public class DetailFragment extends Fragment {
             case 1:
                 textView1.setTextColor(selectedColor);
                 break;
-            case 2:
-                textView2.setTextColor(selectedColor);
-                break;
-            case 3:
-                textView3.setTextColor(selectedColor);
-                break;
+       		
+       		...
+       		
             default:
                 Log.d(TAG, "unknown master ID");
         }
@@ -399,7 +356,7 @@ So create a resource directory `src/main/res/layout-sw600dp` and inside it creat
 
 `layout-sw600dp/activity_main.xml`:
 
-```
+```xml
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -411,6 +368,7 @@ So create a resource directory `src/main/res/layout-sw600dp` and inside it creat
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
+        android:fitsSystemWindows="true"
         android:minHeight="?attr/actionBarSize"/>
 
     <LinearLayout
@@ -512,15 +470,11 @@ All we need to do is null check `drawerLayout` before setting up drawer view and
 
 At this point we are almost wrapped up. Checking our results on several phones and tablets shows that things are working as expected.
 
-![phone](readme_images/phone_and_tablet_almost.png)
-
-*Navigation drawer on phone and master/detail on tablet.*
-
 
 Bonus Round
 ----
 
-There are two small things bothering me. First let's compare the navigation drawer to pre-API 19 devices with newer ones:
+There is one small things bothering me. Let's compare the navigation drawer to pre-API 19 devices with newer ones:
 
 ![yuck](readme_images/yuck_closeup.png)
 
@@ -534,7 +488,7 @@ When we followed the CodePath example we used a transparent status bar on API 19
 
 `fragment_detail.xml`:
 
-```
+```xml
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
@@ -543,14 +497,13 @@ When we followed the CodePath example we used a transparent status bar on API 19
               android:paddingTop="@dimen/nav_drawer_top_padding" <!-- add this line -->
               android:orientation="vertical">
  ...              
- 
 ```
 
 To do this we'll use two more qualified resource directories. First let's set the dimension for API19+ devices
 
 `values-v19/dimens.xml`:
 
-```
+```xml
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- on api 19+ devices nav drawer will go "under" status bar, 
@@ -563,8 +516,7 @@ Then we need to supply a default value:
 
 `values/dimens.xml`:
 
-```
-
+```xml
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- on devices older than API 19, we don't need to pad top 
@@ -577,7 +529,7 @@ Now lastly you'll notice that on devices that are API 19+ but also tablets (sw >
 
 `values-sw600dp/dimens.xml`:
 
-```
+```xml
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- we don't need nav drawer top padding on sw600dp + 
@@ -591,28 +543,6 @@ This works because smallest width qualifiers are checked before API version qual
 ![api 19 finally looking good](readme_images/api19_closeup.png)
 
 *Navigation drawer finally looks good on phones that are API 19 and newer.*
-
-The second problem involves tablets that are API 19+. Here we see that the Toolbar is slid up under the transparent status bar. This is also caused by `android:windowTranslucentStatus`. 
-
-![yuck tablet](readme_images/yuck_tablet_closeup.png)
-
-*Yuck! Toolbar looks terrible on tablets that are API 19 and newer.*
-
-The solution is to disable this style for tablets. Within the `values-sw600dp` directory create a new `styles.xml` file and copy the default style from `values/styles.xml`:
-
-`values-sw600dp/styles.xml`:
-
-```
-<resources>
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar"/>
-</resources>
-```
-
-Now things are working great!
-
-![tablet is looking good](readme_images/tablet_closeup.png)
-
-*Finally looks good on tablets too.*
 
 
 That's it. Now everything looks perfect on old and new phones and old and new tablets! Get the sourcecode for this project [here](https://github.com/tir38/android-master-detail-nav-drawer).

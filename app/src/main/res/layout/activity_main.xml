@@ -30,8 +30,7 @@
         android:id="@+id/master_fragment_container"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:fitsSystemWindows="true">
+        android:layout_gravity="start">
 
     </android.support.design.widget.NavigationView>
 
