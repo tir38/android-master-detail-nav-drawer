@@ -269,14 +269,14 @@ Next we need to pass the clicked item ID from the master fragment "up" to our ac
  So our fragments and activity becomes:
 
 `MasterFragment.java`:
-<pre>
+```java
 public class MasterFragment extends Fragment {
 
-    <b>private Callbacks callbacks;
+    private Callbacks callbacks;
 
     interface Callbacks {
         void onMasterItemClicked(int masterItemId);
-    }</b>
+    }
 
     @Nullable
     @Override
@@ -290,7 +290,7 @@ public class MasterFragment extends Fragment {
         textView1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                <b>callbacks.onMasterItemClicked(1); // repeat for other textViews</b>
+                callbacks.onMasterItemClicked(1); // repeat for other textViews
             }
         });
 
@@ -299,16 +299,16 @@ public class MasterFragment extends Fragment {
         return view;
     }
 }
-</pre>
+```
 
 
 `MainActivity.java`:
-<pre>
-public class MainActivity extends AppCompatActivity <b>implements MasterFragment.Callbacks</b> {
+```java
+public class MainActivity extends AppCompatActivity implements MasterFragment.Callbacks {
 
 	...
 
-    <b>@Override
+    @Override
     public void onMasterItemClicked(int masterItemId) {
         DetailFragment detailFragment = 
         	(DetailFragment) getSupportFragmentManager().findFragmentByTag(TAG_DETAIL_FRAGMENT);
@@ -317,18 +317,18 @@ public class MainActivity extends AppCompatActivity <b>implements MasterFragment
 
         // Close the navigation drawer
         drawerLayout.closeDrawers();
-     }</b>
+     }
 }
-</pre>
+```
 
 
 `DetailFragment.java`:
-<pre>
+```java
 public class DetailFragment extends Fragment {
 	
 	...
 
-	<b>public void onMasterItemClicked(int masterId) {
+	public void onMasterItemClicked(int masterId) {
         // reset colors
         textView1.setTextColor(nonSelectedColor);
         textView2.setTextColor(nonSelectedColor);
@@ -344,9 +344,9 @@ public class DetailFragment extends Fragment {
             default:
                 Log.d(TAG, "unknown master ID");
         }
-    }</b>
+    }
 }
-</pre>
+```
 
 At this point we've basically reproduced the functionality of the CodePath example but with Fragments. We don't yet have anything to show for our extra work. So now is the time to re-use our master and detail fragments to make the UI look different on larger screens.
 
@@ -399,7 +399,7 @@ Now we need to head back to our Activity and make sure it can handle this new la
 
 `MainActivity.java`:
 
-<pre>
+```java
 public class MainActivity extends AppCompatActivity implements MasterFragment.Callbacks {
 
     private static final String TAG_MASTER_FRAGMENT = "TAG_MASTER_FRAGMENT";
@@ -418,7 +418,7 @@ public class MainActivity extends AppCompatActivity implements MasterFragment.Ca
         setSupportActionBar(toolbar);
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        <b>if (drawerLayout != null) {</b>
+        if (drawerLayout != null) { // <------ add if
             // setup drawer view
             NavigationView navigationView = (NavigationView) findViewById(R.id.master_fragment_container);
             navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -434,7 +434,7 @@ public class MainActivity extends AppCompatActivity implements MasterFragment.Ca
                 actionBar.setHomeAsUpIndicator(R.drawable.ic_menu_black_24dp);
                 actionBar.setDisplayHomeAsUpEnabled(true);
             }
-        <b>}</b>
+        }
 
         // insert detail fragment into detail container
         DetailFragment detailFragment = DetailFragment.newInstance();
@@ -459,12 +459,12 @@ public class MainActivity extends AppCompatActivity implements MasterFragment.Ca
         detailFragment.onMasterItemClicked(masterItemId);
 
         // Close the navigation drawer
-        <b>if (drawerLayout != null) {</b>
+        if (drawerLayout != null) { // <----- add if
             drawerLayout.closeDrawers();
-        <b>}</b>
+        }
     }
 }
-</pre>
+```
 
 All we need to do is null check `drawerLayout` before setting up drawer view and menu icon and before we try to close the drawer. If Android decides to use our `layout/activity_main.xml`, then the view hierarchy will contain a view with id `drawer_layout`. If Android decides to use `layout-sw600dp/activity_main.xml`, then the view hierarchy will NOT contain a view with that id. In other words, we are able to use the presence of `drawerLayout` as an indication of whether we're on a large screen or not.
 
